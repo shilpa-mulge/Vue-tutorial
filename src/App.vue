@@ -2,6 +2,7 @@
 export default {
   data() {
     return {
+      task: "",
       tasks: [
         {
           name: "read book",
@@ -13,6 +14,15 @@ export default {
         },
       ],
     };
+  },
+  methods: {
+    submitTask() {
+      if (this.task.length === 0) return;
+      this.tasks.push({
+        name: this.task,
+        status: "to-do",
+      });
+    },
   },
 };
 </script>
@@ -28,7 +38,9 @@ export default {
       placeholder="enter task"
       class="form-control"
     />
-    <button class="btn btn-warning rounded-0">submit</button>
+    <button @click="submitTask" class="btn btn-warning rounded-0">
+      submit
+    </button>
   </div>
   <table class="table table-dark mt-5 w-100">
     <thead>
