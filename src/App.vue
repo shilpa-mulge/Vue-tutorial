@@ -3,6 +3,8 @@ export default {
   data() {
     return {
       task: "",
+      editedTask: null,
+      statuses: ["Todo", "In-progress", "Finished"],
       tasks: [
         {
           name: "read book",
@@ -18,10 +20,30 @@ export default {
   methods: {
     submitTask() {
       if (this.task.length === 0) return;
-      this.tasks.push({
-        name: this.task,
-        status: "to-do",
-      });
+      if (this.editedTask === null) {
+        this.tasks.push({
+          name: this.task,
+          status: "to-do",
+        });
+      } else {
+        this.tasks[this.editedTask].name = this.task;
+        this.editedTask = null;
+      }
+      this.task = "";
+    },
+
+    deleteTask(index) {
+      this.tasks.splice(index, 1);
+    },
+
+    editTask(index) {
+      this.task = this.tasks[index].name;
+      this.editedTask = index;
+    },
+    changeStatus(index) {
+      let newIndex = this.statuses.indexOf(this.tasks[index].status);
+      if (++newIndex > 2) newIndex = 0;
+      this.tasks[index].status = this.statuses[newIndex];
     },
   },
 };
@@ -54,14 +76,18 @@ export default {
     <tbody>
       <tr v-for="(task, index) in tasks" :key="index">
         <td>{{ task.name }}</td>
-        <td>{{ task.status }}</td>
+        <td style="width: 120px">
+          <span @click="changeStatus(index)" class="pointer">{{
+            task.status
+          }}</span>
+        </td>
         <td>
-          <div class="text-center">
+          <div class="text-center" @click="editTask(index)">
             <span class="fa fa-pen"></span>
           </div>
         </td>
         <td>
-          <div class="text-center">
+          <div class="text-center" @click="deleteTask(index)">
             <span class="fa fa-trash"></span>
           </div>
         </td>
@@ -70,4 +96,8 @@ export default {
   </table>
 </template>
 
-<style scoped></style>
+<style>
+.pointer {
+  cursor: pointer;
+}
+</style>
