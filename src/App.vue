@@ -4,7 +4,7 @@ export default {
     return {
       task: "",
       editedTask: null,
-      statuses: ["Todo", "In-progress", "Finished"],
+      statuses: ["To-do", "In-progress", "Finished"],
       tasks: [
         {
           name: "read book",
@@ -75,11 +75,22 @@ export default {
     </thead>
     <tbody>
       <tr v-for="(task, index) in tasks" :key="index">
-        <td>{{ task.name }}</td>
-        <td style="width: 120px">
-          <span @click="changeStatus(index)" class="pointer">{{
-            task.status
+        <td>
+          <span :class="{ finished: task.status === 'Finished' }">{{
+            task.name
           }}</span>
+        </td>
+        <td style="width: 120px">
+          <span
+            @click="changeStatus(index)"
+            class="pointer"
+            :class="{
+              'text-danger': task.status === 'To-do',
+              'text-warning': task.status === 'In-progress',
+              'text-success': task.status === 'Finished',
+            }"
+            >{{ task.status }}</span
+          >
         </td>
         <td>
           <div class="text-center" @click="editTask(index)">
@@ -99,5 +110,8 @@ export default {
 <style>
 .pointer {
   cursor: pointer;
+}
+.finished {
+  text-decoration: line-through;
 }
 </style>
